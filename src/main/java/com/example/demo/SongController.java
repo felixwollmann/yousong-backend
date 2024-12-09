@@ -3,6 +3,8 @@ package com.example.demo;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +27,10 @@ public class SongController {
     }
 
     @GetMapping("/api/songs")
-    public Iterable<Song> allSongs() {
-        return songRepository.findAll();
+    public Page<Song> allSongs(@RequestParam(name = "page", defaultValue = "0") int page) {
+        final var PAGE_SIZE = 5;
+        PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE);
+        return songRepository.findAll(pageRequest);
     }
 
     @PostMapping("/api/songs")
