@@ -2,9 +2,12 @@ package com.example.demo;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.Lob;
+import io.micrometer.common.lang.Nullable;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 
 @Entity
 public class Song {
@@ -20,6 +23,10 @@ public class Song {
     private String genre;
 
     private int length;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] audio;
 
     protected Song() {
         // no-args constructor required by JPA spec
@@ -69,4 +76,11 @@ public class Song {
         this.title = title;
     }
 
+    public byte[] getAudio() {
+        return audio;
+    }
+
+    public void setAudio(byte[] audio) {
+        this.audio = audio;
+    }
 }
