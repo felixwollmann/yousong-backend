@@ -33,10 +33,14 @@ public class SongController {
     }
 
     @GetMapping("/api/songs")
-    public Page<Song> allSongs(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public Page<SongWithoutAudio> allSongs(@RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "q", defaultValue = "") String q) {
         final var PAGE_SIZE = 5;
         PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE);
-        return songRepository.findAll(pageRequest);
+        if (q.equals(""))
+            return songRepository.findAll(pageRequest);
+        else
+            return songRepository.findBySearchText(q, pageRequest);
     }
 
     @PostMapping("/api/songs/{songId}/audio")
