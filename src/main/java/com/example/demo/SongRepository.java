@@ -12,6 +12,7 @@ public interface SongRepository extends Repository<Song, Long> {
     // @Query("SELECT s FROM Song s WHERE s.id = :id")
     Optional<SongWithoutAudio> findById(Long id);
     Optional<Song> findWithAudioById(Long id);
+    SongWithoutAudio save(SongWithoutAudio newSong);
     Song save(Song newSong);
     void deleteById(Long id);
 

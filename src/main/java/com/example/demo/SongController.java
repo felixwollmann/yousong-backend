@@ -73,7 +73,7 @@ public class SongController {
 
     @PatchMapping("/api/songs/{songId}")
     public Song updateSong(@PathVariable Long songId, @RequestBody Song updatedSong) {
-        Optional<SongWithoutAudio> song = songRepository.findById(songId);
+        Optional<Song> song = songRepository.findWithAudioById(songId);
         if (song.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found");
         }
