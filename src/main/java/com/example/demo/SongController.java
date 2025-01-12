@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,13 +35,14 @@ public class SongController {
 
     @GetMapping("/api/songs")
     public Page<SongWithoutAudio> allSongs(@RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "q", defaultValue = "") String q) {
+            @RequestParam(name = "q", defaultValue = "") String q,
+            @RequestParam(name = "genres", required = false) Set<String> genres) {
         final var PAGE_SIZE = 5;
         PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE);
-        if (q.equals(""))
+        if (q.equals("") && (genres == null || genres.isEmpty()))
             return songRepository.findAll(pageRequest);
         else
-            return songRepository.findBySearchText(q, pageRequest);
+            return songRepository.findBySearchText(q, genres, pageRequest);
     }
 
     @PostMapping("/api/songs/{songId}/audio")
@@ -67,7 +69,7 @@ public class SongController {
         }
         Resource file = new ByteArrayResource(song.get().getAudio());
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @PostMapping("/api/songs")
