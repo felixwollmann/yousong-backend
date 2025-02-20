@@ -21,7 +21,7 @@ public interface SongRepository extends Repository<Song, Long> {
     void deleteById(Long id);
 
     @Query("SELECT s FROM Song s LEFT JOIN s.genres g WHERE " +
-            "(LOWER(s.artist) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "(LOWER(s.artist.name) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(s.title) LIKE LOWER(CONCAT('%', :searchText, '%')))"+
             "AND (:genres IS NULL OR g IN :genres)")
     Page<SongWithoutAudio> findBySearchText(@Param("searchText") String searchText, @Param("genres") Set<String> genres, Pageable pageable);

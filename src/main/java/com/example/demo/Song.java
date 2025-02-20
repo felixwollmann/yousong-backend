@@ -3,6 +3,8 @@ package com.example.demo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+
 import java.util.Set;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -19,7 +21,9 @@ public class Song {
     @Column(nullable = false)
     private String title;
 
-    private String artist;
+
+    @ManyToOne()
+    private Artist artist;
 
     // private String genre;
     // @CollectionTable(name = "user_phone_numbers", joinColumns = @JoinColumn(name = "user_id"))
@@ -39,14 +43,14 @@ public class Song {
         // this one is protected since it should not be used directly
     }
 
-    public Song(String title, String artist, Set<String> genres, int length) {
+    public Song(String title, Artist artist, Set<String> genres, int length) {
         this.title = title;
         this.artist = artist;
         this.genres = genres;
         this.length = length;
     }
 
-    public String getArtist() {
+    public Artist getArtist() { 
         return artist;
     }
 
@@ -66,7 +70,7 @@ public class Song {
         return title;
     }
 
-    public void setArtist(String artist) {
+    public void setArtist(Artist artist) {
         this.artist = artist;
     }
 
