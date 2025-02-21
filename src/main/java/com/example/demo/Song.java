@@ -4,6 +4,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
 import jakarta.persistence.Basic;
@@ -19,10 +22,12 @@ public class Song {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Title is mandatory")
     private String title;
 
 
     @ManyToOne()
+    @NotNull(message = "Artist is mandatory")
     private Artist artist;
 
     // private String genre;
@@ -32,6 +37,8 @@ public class Song {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> genres;
     
+    @NotNull(message = "Length is mandatory")
+    @Min(0)
     private int length;
 
     @Lob

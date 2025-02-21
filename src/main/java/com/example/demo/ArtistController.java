@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,12 +31,12 @@ public class ArtistController {
     }
 
     @PostMapping("/api/artists")
-    public Artist createArtist(@RequestBody Artist newArtist) {
+    public Artist createArtist(@Valid @RequestBody Artist newArtist) {
         return artistRepository.save(newArtist);
     }
 
     @PatchMapping("/api/artists/{artistId}")
-    public Artist updateArtist(@PathVariable Long artistId, @RequestBody Artist updatedArtist) {
+    public Artist updateArtist(@Valid @PathVariable Long artistId, @RequestBody Artist updatedArtist) {
         Optional<Artist> artist = artistRepository.findById(artistId);
         if (artist.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

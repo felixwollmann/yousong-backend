@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import jakarta.validation.Valid;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -73,12 +75,12 @@ public class SongController {
     }
 
     @PostMapping("/api/songs")
-    public Song createSong(@RequestBody Song newSong) {
+    public Song createSong(@Valid @RequestBody Song newSong) {
         return songRepository.save(newSong);
     }
 
     @PatchMapping("/api/songs/{songId}")
-    public Song updateSong(@PathVariable Long songId, @RequestBody Song updatedSong) {
+    public Song updateSong(@Valid @PathVariable Long songId, @RequestBody Song updatedSong) {
         Optional<Song> song = songRepository.findWithAudioById(songId);
         if (song.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found");
@@ -92,7 +94,7 @@ public class SongController {
 
     @DeleteMapping("/api/songs/{songId}")
     public void deleteSong(@PathVariable Long songId) {
-        var song = songRepository.findById(songId);
+        Optional<SongWithoutAudio> song = songRepository.findWithoutAudioById(songId);
         if (song.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found");
         }
