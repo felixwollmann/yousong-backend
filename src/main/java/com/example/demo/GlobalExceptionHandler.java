@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,5 +23,12 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, String>> handleConcurrentUpdate(OptimisticLockingFailureException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Conflict detected. The resource was modified by another transaction.");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 }

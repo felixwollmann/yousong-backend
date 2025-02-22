@@ -34,4 +34,5 @@ interface SongWithoutAudio {
     public Long getId();
     public int getLength();
     public String getTitle();
+    public int getVersion();
 }

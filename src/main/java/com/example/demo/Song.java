@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Version;
 
 @Entity
 public class Song {
@@ -45,6 +46,9 @@ public class Song {
     @Basic(fetch = FetchType.LAZY)
     private byte[] audio;
 
+    @Version
+    private int version;
+
     protected Song() {
         // no-args constructor required by JPA spec
         // this one is protected since it should not be used directly
@@ -75,6 +79,10 @@ public class Song {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     public void setArtist(Artist artist) {
