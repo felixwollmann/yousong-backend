@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +26,11 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import jakarta.validation.Valid;
 
-
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 public class SongController {
     @GetMapping("/hello")
-    @CrossOrigin()
+    @PreAuthorize("isAuthenticated()")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
         return String.format("Hello %s!", name);
     }
@@ -47,6 +47,7 @@ public class SongController {
             return songRepository.findBySearchText(q, genres, pageRequest);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/songs/{songId}/audio")
     public void uploadSong(@PathVariable Long songId, @RequestParam("file") MultipartFile file) {
         Optional<Song> song = songRepository.findWithAudioById(songId);
@@ -74,11 +75,13 @@ public class SongController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/songs")
     public Song createSong(@Valid @RequestBody Song newSong) {
         return songRepository.save(newSong);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/api/songs/{songId}")
     public Song updateSong(@Valid @PathVariable Long songId, @RequestBody Song updatedSong) {
         Optional<Song> song = songRepository.findWithAudioById(songId);
@@ -92,6 +95,7 @@ public class SongController {
         // return song.get();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/songs/{songId}")
     public void deleteSong(@PathVariable Long songId) {
         Optional<SongWithoutAudio> song = songRepository.findWithoutAudioById(songId);
